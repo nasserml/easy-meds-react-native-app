@@ -4,13 +4,41 @@ import {
   StyleSheet,
   TextInput,
   TouchableOpacity,
+  Alert,
 } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import Colors from "../../constant/Colors";
 import { useRouter } from "expo-router";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../../config/FirebaseConfig";
 
 export default function SignIn() {
   const router = useRouter();
+  const [email, setEmail] = useState();
+  const [password, setPassword] = useState();
+
+  const OnSignInClick = () => {
+    if (!email || !password) {
+      Alert.alert("Please enter email and password");
+      return;
+    }
+    signInWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        // Signed in
+        const user = userCredential.user;
+        console.log(user);
+        router.replace("(tabs)");
+        // ...
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        console.log(errorCode, errorMessage);
+        if (errorCode) {
+          Alert.alert("Invalid email or password");
+        }
+      });
+  };
   return (
     <View
       style={{
@@ -27,7 +55,11 @@ export default function SignIn() {
         }}
       >
         <Text>Email</Text>
-        <TextInput placeholder="Email" style={styles.textInput} />
+        <TextInput
+          placeholder="Email"
+          style={styles.textInput}
+          onChangeText={(value) => setEmail(value)}
+        />
       </View>
 
       <View
@@ -40,24 +72,29 @@ export default function SignIn() {
           placeholder="Password"
           style={styles.textInput}
           secureTextEntry={true}
+          onChangeText={(value) => setPassword(value)}
         />
       </View>
 
-      <TouchableOpacity style={styles.button}>
+      <TouchableOpacity style={styles.button} onPress={OnSignInClick}>
         <Text style={{ color: "white", textAlign: "center", fontSize: 17 }}>
           Login
         </Text>
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.buttonCreate} onPress={()=> router.push("/login/signUp")}>
-        <Text style={{ color: Colors.PRIMARY, textAlign: "center", fontSize: 17 }} >
+      <TouchableOpacity
+        style={styles.buttonCreate}
+        onPress={() => router.push("/login/signUp")}
+      >
+        <Text
+          style={{ color: Colors.PRIMARY, textAlign: "center", fontSize: 17 }}
+        >
           Create Account
         </Text>
       </TouchableOpacity>
     </View>
   );
 }
-
 
 const styles = StyleSheet.create({
   textHeader: {

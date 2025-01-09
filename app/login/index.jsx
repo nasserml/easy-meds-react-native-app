@@ -18,6 +18,10 @@ import { useRouter } from "expo-router";
           padding: 25,
           backgroundColor: Colors.PRIMARY,
           height: "100%",
+          borderTopLeftRadius: 40,
+          borderTopRightRadius: 40,
+          zIndex:2,
+          marginTop: -60
         }}
       >
         <Text style={{
