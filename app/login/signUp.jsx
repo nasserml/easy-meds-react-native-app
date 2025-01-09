@@ -11,25 +11,31 @@ import React, { useState } from "react";
 import Colors from "../../constant/Colors";
 import { useRouter } from "expo-router";
 import { auth } from "../../config/FirebaseConfig";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import { setLocalStorage } from "../../service/Storage";
 
 export default function SignUp() {
   const router = useRouter();
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
+  const [userName, setUserName] = useState();
 
   const OnCreateAccount = () => {
-    if (!email || !password) {
+    if (!email || !password || !userName) {
       ToastAndroid.show("Please enter email and password", ToastAndroid.BOTTOM);
       Alert.alert("Please enter email and password");
 
       return;
     }
     createUserWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
+      .then(async (userCredential) => {
         // Signed up
         const user = userCredential.user;
-        console.log(user);
+        await updateProfile(user, {
+          displayName: userName
+        })
+
+        await setLocalStorage("userDetail", user);
         router.replace("(tabs)")
         // ...
       })
@@ -58,7 +64,7 @@ export default function SignUp() {
         }}
       >
         <Text>Full Name</Text>
-        <TextInput placeholder="Full Name" style={styles.textInput} />
+        <TextInput placeholder="Full Name" style={styles.textInput} onChangeText={(value) => setUserName(value)} />
       </View>
 
       <View
