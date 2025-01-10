@@ -2,8 +2,10 @@ import { View, Text, Image, TouchableOpacity } from "react-native";
 import React from "react";
 import ConstantString from "./../constant/ConstantString";
 import Colors from "../constant/Colors";
+import { useRouter } from "expo-router";
 
 export default function EmptyState() {
+  const router = useRouter();
   return (
     <View style={{ display: "flex", alignItems: "center", marginTop: 80 }}>
       <Image
@@ -38,6 +40,7 @@ export default function EmptyState() {
           textAlign: "center",
           marginTop: 30,
         }}
+        onPress={() => {router.push("/add-new-medication")}}
       >
         <Text style={{ color: "white", textAlign: "center", fontSize: 17 }}>
           {ConstantString.AddNewMedicationBtn}
