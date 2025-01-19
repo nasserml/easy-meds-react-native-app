@@ -1,4 +1,4 @@
-import { View, Text, Image } from "react-native";
+import { View, Text, Image, TouchableOpacity } from "react-native";
 import React, { useEffect, useState } from "react";
 import { getLocalStorage, RemoveLocalStorage } from "../service/Storage";
 import { useRouter } from "expo-router";
@@ -40,12 +40,14 @@ export default function Header() {
             Hello {user?.displayName} 👋
           </Text>
         </View>
+        <TouchableOpacity onPress={()=>router.push('/add-new-medication')}>
         <Ionicons
-          name="settings-outline"
+          name="medkit-outline"
           size={24}
-          color={Colors.DARK_GRAY}
+          color={Colors.PRIMARY}
           
         />
+        </TouchableOpacity>
       </View>
     </View>
   );
